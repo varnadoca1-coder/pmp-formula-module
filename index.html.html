@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PMP Formula Canvas Module — IT Project Management</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --color-bg: #ffffff;
+    --color-bg-secondary: #f7f7f5;
+    --color-bg-tertiary: #f0eeea;
+    --color-bg-info: #e6f1fb;
+    --color-bg-success: #eaf3de;
+    --color-bg-danger: #fcebeb;
+    --color-bg-warning: #faeeda;
+    --color-text-primary: #1a1a18;
+    --color-text-secondary: #6b6b67;
+    --color-text-info: #185fa5;
+    --color-text-success: #3b6d11;
+    --color-text-danger: #a32d2d;
+    --color-border: rgba(0,0,0,0.12);
+    --color-border-hover: rgba(0,0,0,0.22);
+    --color-border-info: rgba(24,95,165,0.4);
+    --color-border-success: rgba(59,109,17,0.4);
+    --color-border-danger: rgba(163,45,45,0.4);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --font-sans: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: 'Menlo', 'Consolas', 'Monaco', monospace;
+    --navy: #1B3A6B;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --color-bg: #1c1c1a;
+      --color-bg-secondary: #252523;
+      --color-bg-tertiary: #2e2e2b;
+      --color-bg-info: #0c2a4a;
+      --color-bg-success: #182e08;
+      --color-bg-danger: #2e1212;
+      --color-bg-warning: #2e1e06;
+      --color-text-primary: #f0eeea;
+      --color-text-secondary: #9a9a94;
+      --color-text-info: #85b7eb;
+      --color-text-success: #97c459;
+      --color-text-danger: #f09595;
+      --color-border: rgba(255,255,255,0.12);
+      --color-border-hover: rgba(255,255,255,0.22);
+      --color-border-info: rgba(133,183,235,0.4);
+      --color-border-success: rgba(151,196,89,0.4);
+      --color-border-danger: rgba(240,149,149,0.4);
+    }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-primary);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .app {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--color-bg-tertiary);
+  }
+
+  /* Header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 0.5px solid var(--color-border);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo {
+    width: 40px; height: 40px;
+    border-radius: var(--radius-md);
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo i { color: #fff; font-size: 20px; }
+  .badge-title {
+    font-size: 11px; font-weight: 500; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--color-text-secondary); margin-bottom: 2px;
+  }
+  .main-title { font-size: 20px; font-weight: 500; color: var(--color-text-primary); }
+  .ai-pill {
+    font-size: 12px; font-weight: 500; padding: 5px 14px;
+    border-radius: 20px; background: var(--color-bg-success);
+    color: var(--color-text-success); display: flex; align-items: center; gap: 6px;
+  }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex; gap: 4px; margin-bottom: 1.25rem;
+    overflow-x: auto; padding-bottom: 2px;
+  }
+  .tab {
+    padding: 7px 14px; border-radius: var(--radius-md);
+    border: 0.5px solid transparent; font-size: 13px; font-weight: 500;
+    cursor: pointer; white-space: nowrap; color: var(--color-text-secondary);
+    background: transparent; transition: all .15s; font-family: var(--font-sans);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .tab.active {
+    background: var(--color-bg); border-color: var(--color-border-hover);
+    color: var(--color-text-primary);
+  }
+  .tab:hover:not(.active) { background: var(--color-bg-secondary); }
+
+  /* Grid layouts */
+  .canvas-two { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .canvas-one { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (max-width: 640px) { .canvas-two { grid-template-columns: 1fr; } }
+
+  /* Cards */
+  .card {
+    background: var(--color-bg);
+    border: 0.5px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+  }
+  .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .card-icon { font-size: 16px; color: var(--color-text-secondary); }
+  .card-title { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+  .card-sub { font-size: 12px; color: var(--color-text-secondary); }
+
+  /* Formula list */
+  .formula-grid { display: flex; flex-direction: column; gap: 6px; max-height: 520px; overflow-y: auto; }
+  .formula-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 10px; border-radius: var(--radius-md);
+    border: 0.5px solid var(--color-border); cursor: pointer;
+    transition: border-color .15s, background .15s;
+  }
+  .formula-row:hover, .formula-row.active {
+    border-color: var(--color-border-info); background: var(--color-bg-info);
+  }
+  .formula-row.active .fml-name { color: var(--color-text-info); }
+  .fml-left { display: flex; flex-direction: column; gap: 2px; }
+  .fml-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); }
+  .fml-eq { font-size: 11px; color: var(--color-text-secondary); font-family: var(--font-mono); }
+  .fml-badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: 500; white-space: nowrap; }
+  .badge-ev    { background: #e6f1fb; color: #185fa5; }
+  .badge-time  { background: #eaf3de; color: #3b6d11; }
+  .badge-cost  { background: #faeeda; color: #854f0b; }
+  .badge-risk  { background: #fbeaf0; color: #993556; }
+  .badge-comm  { background: #eeedfe; color: #3c3489; }
+  .badge-proc  { background: #e1f5ee; color: #0f6e56; }
+
+  /* Detail panel */
+  .detail-formula {
+    font-size: 17px; font-weight: 500; font-family: var(--font-mono);
+    color: var(--color-text-primary); text-align: center;
+    padding: 14px; background: var(--color-bg-secondary);
+    border: 0.5px solid var(--color-border); border-radius: var(--radius-md); margin-bottom: 10px;
+  }
+  .detail-vars { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 10px; }
+  .var-item {
+    display: flex; flex-direction: column; gap: 2px;
+    padding: 6px 8px; border-radius: var(--radius-md);
+    background: var(--color-bg-secondary); border: 0.5px solid var(--color-border);
+  }
+  .var-abbr { font-size: 11px; font-weight: 500; font-family: var(--font-mono); color: var(--color-text-info); }
+  .var-full { font-size: 11px; color: var(--color-text-secondary); }
+  .detail-box {
+    background: var(--color-bg-secondary); border-radius: var(--radius-md);
+    padding: 10px 12px; margin-bottom: 10px;
+  }
+  .detail-tip-label {
+    font-size: 10px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--color-text-secondary); margin-bottom: 5px;
+  }
+  .detail-tip { font-size: 12px; color: var(--color-text-secondary); line-height: 1.6; }
+
+  /* Buttons */
+  .btn {
+    padding: 7px 16px; border-radius: var(--radius-md);
+    border: 0.5px solid var(--color-border-hover);
+    background: var(--color-bg); color: var(--color-text-primary);
+    font-size: 13px; cursor: pointer; font-family: var(--font-sans);
+    transition: all .15s; display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn:hover { background: var(--color-bg-secondary); }
+  .btn.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
+  .btn.primary:hover { opacity: .88; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+
+  /* Calculator */
+  .calc-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .calc-label { font-size: 12px; color: var(--color-text-secondary); }
+  .calc-input {
+    flex: 1; border: 0.5px solid var(--color-border-hover);
+    border-radius: var(--radius-md); padding: 7px 10px;
+    font-size: 13px; background: var(--color-bg);
+    color: var(--color-text-primary); font-family: var(--font-sans);
+  }
+  .calc-input:focus { outline: none; border-color: var(--color-border-info); }
+  .result-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 10px; border-radius: var(--radius-md);
+    border: 0.5px solid var(--color-border); margin-bottom: 6px;
+  }
+  .result-abbr { font-size: 11px; font-weight: 500; font-family: var(--font-mono); color: var(--color-text-secondary); min-width: 40px; }
+  .result-label-txt { font-size: 12px; color: var(--color-text-secondary); }
+  .result-val { font-size: 15px; font-weight: 500; font-family: var(--font-mono); }
+  .good { color: var(--color-text-success); }
+  .bad  { color: var(--color-text-danger); }
+
+  /* Quiz */
+  .quiz-q { font-size: 14px; font-weight: 500; color: var(--color-text-primary); line-height: 1.6; margin-bottom: 14px; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 7px; margin-bottom: 12px; }
+  .quiz-opt {
+    padding: 9px 14px; border-radius: var(--radius-md);
+    border: 0.5px solid var(--color-border); font-size: 13px;
+    cursor: pointer; text-align: left; background: var(--color-bg);
+    color: var(--color-text-primary); transition: all .15s;
+    font-family: var(--font-sans); width: 100%;
+  }
+  .quiz-opt:hover:not(:disabled) { border-color: var(--color-border-hover); background: var(--color-bg-secondary); }
+  .quiz-opt.correct { background: var(--color-bg-success); border-color: var(--color-border-success); color: var(--color-text-success); }
+  .quiz-opt.wrong   { background: var(--color-bg-danger);  border-color: var(--color-border-danger);  color: var(--color-text-danger); }
+  .quiz-opt:disabled { cursor: default; }
+  .quiz-feedback {
+    font-size: 13px; line-height: 1.6; padding: 10px 12px;
+    border-radius: var(--radius-md); background: var(--color-bg-secondary);
+    color: var(--color-text-secondary); margin-bottom: 10px;
+  }
+  .progress-bar { height: 4px; background: var(--color-bg-secondary); border-radius: 4px; overflow: hidden; margin-bottom: 4px; }
+  .progress-fill { height: 100%; background: var(--navy); border-radius: 4px; transition: width .4s; }
+  .progress-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 1rem; }
+
+  /* Cheat sheet */
+  .cheat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 1rem; }
+  @media (max-width: 500px) { .cheat-grid { grid-template-columns: 1fr; } }
+  .cs-cat { border: 0.5px solid var(--color-border); border-radius: var(--radius-md); padding: 10px; }
+  .cs-cat-title {
+    font-size: 10px; font-weight: 500; text-transform: uppercase;
+    letter-spacing: .06em; color: var(--color-text-secondary); margin-bottom: 8px;
+  }
+  .cs-item {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 3px 0; border-bottom: 0.5px solid var(--color-border);
+  }
+  .cs-item:last-child { border-bottom: none; }
+  .cs-abbr { font-size: 11px; font-weight: 500; font-family: var(--font-mono); color: var(--color-text-primary); }
+  .cs-eq   { font-size: 10px; font-family: var(--font-mono); color: var(--color-text-secondary); }
+  .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  @media (max-width: 500px) { .rules-grid { grid-template-columns: 1fr; } }
+  .rule-item {
+    font-size: 11px; padding: 5px 8px; border-radius: var(--radius-md);
+    border: 0.5px solid var(--color-border);
+  }
+
+  /* AI tutor */
+  .ai-box { border: 0.5px solid var(--color-border); border-radius: var(--radius-lg); overflow: hidden; }
+  .ai-top {
+    background: var(--color-bg-secondary); padding: 10px 14px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 0.5px solid var(--color-border);
+  }
+  .ai-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--navy); }
+  .ai-label { font-size: 12px; color: var(--color-text-secondary); }
+  .ai-body { padding: 14px; min-height: 280px; max-height: 380px; overflow-y: auto; }
+  .ai-bubble {
+    display: flex; gap: 8px; align-items: flex-start; margin-bottom: 12px;
+  }
+  .ai-bubble.user { flex-direction: row-reverse; }
+  .ai-avatar {
+    width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 12px;
+  }
+  .ai-avatar.bot { background: var(--navy); color: #fff; }
+  .ai-avatar.user { background: var(--color-bg-secondary); color: var(--color-text-secondary); }
+  .ai-text {
+    max-width: 85%; padding: 9px 13px; border-radius: var(--radius-md);
+    font-size: 13px; line-height: 1.6;
+  }
+  .ai-text.bot { background: var(--color-bg-secondary); color: var(--color-text-primary); }
+  .ai-text.user { background: var(--navy); color: #fff; }
+  .ai-input-row {
+    display: flex; gap: 6px; padding: 10px 14px;
+    border-top: 0.5px solid var(--color-border); background: var(--color-bg);
+  }
+  .ai-input {
+    flex: 1; border: 0.5px solid var(--color-border-hover);
+    border-radius: var(--radius-md); padding: 7px 10px;
+    font-size: 13px; background: var(--color-bg);
+    color: var(--color-text-primary); font-family: var(--font-sans);
+  }
+  .ai-input:focus { outline: none; border-color: var(--color-border-info); }
+  .quick-btns { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 12px; }
+  .stat-card { background: var(--color-bg-secondary); border-radius: var(--radius-md); padding: 10px; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+  .stat-lbl { font-size: 11px; color: var(--color-text-secondary); margin-top: 2px; }
+
+  /* Typing animation */
+  .typing { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--color-text-secondary); animation: bounce .8s infinite; }
+  .dot:nth-child(2) { animation-delay: .15s; }
+  .dot:nth-child(3) { animation-delay: .3s; }
+  @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+
+  /* Result completion screen */
+  .result-screen { text-align: center; padding: 2.5rem 0; }
+  .result-pct { font-size: 56px; font-weight: 500; font-family: var(--font-mono); }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo"><i class="ti ti-chart-gantt"></i></div>
+      <div>
+        <div class="badge-title">IT Project Management · PMP Exam Prep</div>
+        <div class="main-title">Formula Canvas Module</div>
+      </div>
+    </div>
+    <div class="ai-pill"><i class="ti ti-brain"></i> AI Tutor Active</div>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar" id="tabBar"></div>
+
+  <!-- Panel -->
+  <div id="panel"></div>
+
+</div>
+
+<script>
+/* ─── DATA ─────────────────────────────────────────────────────────────── */
+const TABS = [
+  {id:'formulas',    label:'Formula Library',  icon:'ti-math-function'},
+  {id:'calculator',  label:'EV Calculator',    icon:'ti-calculator'},
+  {id:'quiz',        label:'Practice Quiz',    icon:'ti-pencil'},
+  {id:'cheatsheet',  label:'Cheat Sheet',      icon:'ti-file-description'},
+  {id:'ai',          label:'AI Tutor',         icon:'ti-message-chatbot'},
+];
+
+const CAT_LABELS = {ev:'Earned Value',time:'Schedule',comm:'Communication',risk:'Risk',proc:'Procurement',cost:'Cost/Finance'};
+const CAT_CLASS  = {ev:'badge-ev',time:'badge-time',comm:'badge-comm',risk:'badge-risk',proc:'badge-proc',cost:'badge-cost'};
+
+const FORMULAS = [
+  {name:'Earned Value (EV)',             eq:'EV = BAC × % Complete',                         cat:'ev',   tip:'EV is the budgeted cost of work actually performed. Always calculated as a percentage of BAC.',                                               vars:[{a:'EV',f:'Earned Value'},{a:'BAC',f:'Budget at Completion'},{a:'%C',f:'Percent Complete'}]},
+  {name:'Planned Value (PV)',            eq:'PV = BAC × % Scheduled',                        cat:'ev',   tip:'PV is what you planned to spend by now. Compare with EV to determine schedule performance.',                                                vars:[{a:'PV',f:'Planned Value'},{a:'BAC',f:'Budget at Completion'}]},
+  {name:'Actual Cost (AC)',              eq:'AC = Actual costs incurred',                     cat:'ev',   tip:'AC is the real money spent to accomplish work. Track this from accounting systems.',                                                        vars:[{a:'AC',f:'Actual Cost'}]},
+  {name:'Cost Variance (CV)',            eq:'CV = EV − AC',                                  cat:'ev',   tip:'Positive = under budget. Negative = over budget. Critical exam flag: negative CV is bad!',                                                  vars:[{a:'CV',f:'Cost Variance'},{a:'EV',f:'Earned Value'},{a:'AC',f:'Actual Cost'}]},
+  {name:'Schedule Variance (SV)',        eq:'SV = EV − PV',                                  cat:'ev',   tip:'Positive = ahead of schedule. Negative = behind schedule. SV → 0 at project end.',                                                         vars:[{a:'SV',f:'Schedule Variance'},{a:'EV',f:'Earned Value'},{a:'PV',f:'Planned Value'}]},
+  {name:'Cost Performance Index (CPI)', eq:'CPI = EV / AC',                                  cat:'ev',   tip:'CPI > 1: good (getting more value per dollar). CPI < 1: bad. The most critical EV index!',                                                 vars:[{a:'CPI',f:'Cost Perf. Index'},{a:'EV',f:'Earned Value'},{a:'AC',f:'Actual Cost'}]},
+  {name:'Schedule Perf. Index (SPI)',    eq:'SPI = EV / PV',                                  cat:'ev',   tip:'SPI > 1: ahead of schedule. SPI < 1: behind. SPI becomes 1.0 at project completion.',                                                      vars:[{a:'SPI',f:'Schedule Perf. Index'},{a:'EV',f:'Earned Value'},{a:'PV',f:'Planned Value'}]},
+  {name:'Estimate at Completion (EAC)', eq:'EAC = BAC / CPI',                                 cat:'ev',   tip:'Most common EAC formula. Assumes past CPI performance will continue for remaining work.',                                                   vars:[{a:'EAC',f:'Estimate at Completion'},{a:'BAC',f:'Budget at Completion'},{a:'CPI',f:'Cost Perf. Index'}]},
+  {name:'EAC (re-estimate)',             eq:'EAC = AC + ETC',                                 cat:'ev',   tip:'Use when original estimate is fundamentally flawed and you re-estimate remaining work fresh.',                                               vars:[{a:'EAC',f:'Estimate at Completion'},{a:'AC',f:'Actual Cost'},{a:'ETC',f:'Estimate to Complete'}]},
+  {name:'EAC (combined CPI·SPI)',        eq:'EAC = AC + [(BAC−EV)/(CPI×SPI)]',               cat:'ev',   tip:'Use when schedule efficiency is affecting costs — common in IT projects with staff under pressure.',                                         vars:[{a:'EAC',f:'Estimate at Completion'},{a:'CPI',f:'Cost Perf. Index'},{a:'SPI',f:'Schedule Perf. Index'}]},
+  {name:'Estimate to Complete (ETC)',    eq:'ETC = EAC − AC',                                 cat:'ev',   tip:'How much more money do we need? ETC is the remaining budget from now to project end.',                                                       vars:[{a:'ETC',f:'Estimate to Complete'},{a:'EAC',f:'Estimate at Completion'},{a:'AC',f:'Actual Cost'}]},
+  {name:'Variance at Completion (VAC)', eq:'VAC = BAC − EAC',                                 cat:'ev',   tip:'Predicted over/under run at completion. Positive VAC = will finish under budget.',                                                          vars:[{a:'VAC',f:'Variance at Completion'},{a:'BAC',f:'Budget at Completion'},{a:'EAC',f:'Estimate at Completion'}]},
+  {name:'To-Complete Perf. Index (TCPI)',eq:'TCPI = (BAC−EV)/(BAC−AC)',                       cat:'ev',   tip:'Efficiency needed to finish within budget. TCPI > 1 means you need to work more efficiently.',                                               vars:[{a:'TCPI',f:'TCPI'},{a:'BAC',f:'Budget at Completion'},{a:'EV',f:'Earned Value'},{a:'AC',f:'Actual Cost'}]},
+  {name:'PERT Estimate',                 eq:'E = (O + 4M + P) / 6',                          cat:'time', tip:'Weighted average that accounts for risk. The "4M" weight reflects that realistic estimates are most likely.',                                vars:[{a:'O',f:'Optimistic'},{a:'M',f:'Most Likely'},{a:'P',f:'Pessimistic'},{a:'E',f:'Expected Duration'}]},
+  {name:'PERT Standard Deviation',       eq:'σ = (P − O) / 6',                               cat:'time', tip:'Measures uncertainty range. Larger σ = more risk. Use to build confidence intervals.',                                                       vars:[{a:'σ',f:'Standard Deviation'},{a:'P',f:'Pessimistic'},{a:'O',f:'Optimistic'}]},
+  {name:'PERT Variance',                 eq:'σ² = [(P − O) / 6]²',                           cat:'time', tip:'Sum variances (not std devs) across critical path activities to get total project variance.',                                                vars:[{a:'σ²',f:'Variance'},{a:'P',f:'Pessimistic'},{a:'O',f:'Optimistic'}]},
+  {name:'Float (Total Float)',           eq:'Float = LS − ES  or  LF − EF',                  cat:'time', tip:'Amount of time an activity can be delayed without delaying the project. Critical path = 0 float.',                                          vars:[{a:'LS',f:'Late Start'},{a:'ES',f:'Early Start'},{a:'LF',f:'Late Finish'},{a:'EF',f:'Early Finish'}]},
+  {name:'Communication Channels',       eq:'N(N−1) / 2',                                     cat:'comm', tip:'N = number of stakeholders. Adding one person dramatically increases complexity — key exam concept!',                                         vars:[{a:'N',f:'Number of Stakeholders'}]},
+  {name:'Expected Monetary Value (EMV)', eq:'EMV = Probability × Impact',                    cat:'risk', tip:'Used in decision tree analysis. Sum all EMVs for a branch to evaluate risk response options.',                                               vars:[{a:'EMV',f:'Expected Monetary Value'},{a:'P',f:'Probability (0–1)'},{a:'I',f:'Impact ($)'}]},
+  {name:'Point of Total Assumption (PTA)',eq:'PTA = ((Ceiling−Target)/Sharing%) + Target',   cat:'proc', tip:'In fixed-price-incentive contracts, PTA is where contractor absorbs 100% of cost overruns.',                                               vars:[{a:'PTA',f:'Point of Total Assumption'},{a:'CP',f:'Ceiling Price'},{a:'TP',f:'Target Price'}]},
+  {name:'Present Value (PV formula)',    eq:'PV = FV / (1 + r)ⁿ',                            cat:'cost', tip:'A dollar today is worth more than a dollar tomorrow. Used in project selection decisions.',                                                  vars:[{a:'PV',f:'Present Value'},{a:'FV',f:'Future Value'},{a:'r',f:'Interest Rate'},{a:'n',f:'Periods'}]},
+  {name:'Net Present Value (NPV)',       eq:'NPV = Σ PV of inflows − Cost',                  cat:'cost', tip:'Higher NPV = better project investment. Always select highest NPV when choosing between projects.',                                         vars:[{a:'NPV',f:'Net Present Value'},{a:'PV',f:'Present Value'}]},
+  {name:'Return on Investment (ROI)',    eq:'ROI = (Benefit − Cost) / Cost × 100%',           cat:'cost', tip:'Used for project selection. Higher ROI = preferred. Compare projects on same timeline.',                                                    vars:[{a:'ROI',f:'Return on Investment'},{a:'B',f:'Benefit'},{a:'C',f:'Cost'}]},
+  {name:'Benefit-Cost Ratio (BCR)',      eq:'BCR = Benefits / Costs',                         cat:'cost', tip:'BCR > 1 means benefits exceed costs. Used in project selection and procurement decisions.',                                                 vars:[{a:'BCR',f:'Benefit-Cost Ratio'},{a:'B',f:'Benefits'},{a:'C',f:'Costs'}]},
+];
+
+const QUIZ_QUESTIONS = [
+  {q:'A project has EV=$600, AC=$750, PV=$700. What is the CPI?',                                opts:['0.80','0.86','1.17','0.93'],ans:0,exp:'CPI = EV/AC = 600/750 = 0.80. You get only $0.80 of value per dollar spent — the project is over budget.'},
+  {q:'Using PERT with O=4, M=6, P=14 days, what is the expected duration?',                      opts:['6.0 days','7.0 days','8.0 days','6.67 days'],ans:1,exp:'E = (O+4M+P)/6 = (4+24+14)/6 = 42/6 = 7.0 days. The weighted average favors the most likely estimate.'},
+  {q:'A project has 10 stakeholders. How many communication channels exist?',                     opts:['45','90','10','55'],ans:0,exp:'Channels = N(N−1)/2 = 10×9/2 = 45. This is why stakeholder management is so complex in large projects!'},
+  {q:'EAC = $200K, AC = $120K. What is the ETC?',                                                opts:['$320K','$80K','$200K','$120K'],ans:1,exp:'ETC = EAC − AC = 200,000 − 120,000 = $80,000. This is how much more money is needed to finish.'},
+  {q:'SV is negative and CV is positive. What does this mean?',                                   opts:['Behind schedule, under budget','Ahead of schedule, over budget','Behind schedule, over budget','Ahead of schedule, under budget'],ans:0,exp:'SV = EV−PV. Negative → EV < PV → behind schedule. CV = EV−AC. Positive → EV > AC → under budget.'},
+  {q:'BAC=$500K, EV=$300K, AC=$310K. What is the TCPI?',                                         opts:['1.05','0.97','1.03','1.11'],ans:0,exp:'TCPI = (BAC−EV)/(BAC−AC) = (500−300)/(500−310) = 200/190 ≈ 1.05. You need 5% higher efficiency.'},
+  {q:'Which EAC formula assumes past cost efficiency will NOT continue?',                         opts:['EAC=BAC/CPI','EAC=AC+ETC','EAC=AC+[(BAC−EV)/(CPI×SPI)]','EAC=AC+(BAC−EV)'],ans:1,exp:'EAC = AC + ETC uses a fresh bottom-up re-estimate, ignoring past CPI performance.'},
+  {q:'An activity has ES=5, EF=10, LS=8, LF=13. What is the total float?',                       opts:['3 days','5 days','2 days','1 day'],ans:0,exp:'Float = LS − ES = 8 − 5 = 3 days. This activity can slip 3 days without affecting the end date.'},
+];
+
+/* ─── STATE ─────────────────────────────────────────────────────────────── */
+const state = {
+  activeTab: 'formulas',
+  activeFormula: 0,
+  quizIdx: 0, quizScore: 0, quizAnswered: false, quizComplete: false,
+  aiMessages: [{role:'ai', text:'Hello! I\'m your PMP AI Tutor. Ask me anything about PMP formulas — like "explain CPI", "when do I use PERT?", or "give me a practice problem on EVM".'}],
+  aiLoading: false,
+  ev: {bac:'500000', ev:'350000', ac:'370000', pv:'380000'},
+};
+
+/* ─── HELPERS ───────────────────────────────────────────────────────────── */
+function badge(cat){ return `<span class="fml-badge ${CAT_CLASS[cat]}">${CAT_LABELS[cat]}</span>`; }
+function fmtCur(n){ return '$' + Math.round(n).toLocaleString(); }
+function fmtIdx(n){ return n.toFixed(2); }
+
+/* ─── RENDER FUNCTIONS ──────────────────────────────────────────────────── */
+function renderTabs(){
+  document.getElementById('tabBar').innerHTML = TABS.map(t =>
+    `<button class="tab${t.id===state.activeTab?' active':''}" onclick="switchTab('${t.id}')">
+       <i class="ti ${t.icon}"></i> ${t.label}
+     </button>`
+  ).join('');
+}
+
+function renderFormulaDetail(idx){
+  const f = FORMULAS[idx];
+  return `
+    <div class="detail-formula">${f.eq}</div>
+    <div style="margin-bottom:8px">${badge(f.cat)}</div>
+    <div class="detail-vars">${(f.vars||[]).map(v=>`<div class="var-item"><span class="var-abbr">${v.a}</span><span class="var-full">${v.f}</span></div>`).join('')}</div>
+    <div class="detail-box">
+      <div class="detail-tip-label">Exam Tip</div>
+      <div class="detail-tip">${f.tip}</div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" onclick="askAI('Explain the ${f.name} formula in detail with an IT project example')"><i class="ti ti-message-chatbot"></i> Ask AI ↗</button>
+      <button class="btn" onclick="askAI('Give me a PMP exam-style practice question about ${f.name}')"><i class="ti ti-pencil"></i> Practice ↗</button>
+    </div>`;
+}
+
+function renderFormulas(){
+  return `<div class="canvas-two">
+    <div class="card">
+      <div class="card-header">
+        <i class="ti ti-math-function card-icon"></i>
+        <div><div class="card-title">PMP Formula Library</div><div class="card-sub">${FORMULAS.length} formulas · Click any to explore</div></div>
+      </div>
+      <div class="formula-grid">
+        ${FORMULAS.map((f,i)=>`
+          <div class="formula-row${i===state.activeFormula?' active':''}" onclick="selectFormula(${i})">
+            <div class="fml-left">
+              <span class="fml-name">${f.name}</span>
+              <span class="fml-eq">${f.eq}</span>
+            </div>
+            ${badge(f.cat)}
+          </div>`).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <i class="ti ti-zoom-in card-icon"></i>
+        <div><div class="card-title">Formula Detail</div><div class="card-sub">Variables, tips, and exam notes</div></div>
+      </div>
+      <div id="formulaDetail">${renderFormulaDetail(state.activeFormula)}</div>
+    </div>
+  </div>`;
+}
+
+function renderCalculator(){
+  const B=parseFloat(state.ev.bac)||0, E=parseFloat(state.ev.ev)||0,
+        A=parseFloat(state.ev.ac)||0,  P=parseFloat(state.ev.pv)||0;
+  const cv=E-A, sv=E-P, cpi=A?E/A:0, spi=P?E/P:0;
+  const eac=cpi?B/cpi:0, etc=eac-A, vac=B-eac, tcpi=(B-A)?(B-E)/(B-A):0;
+  const rows = [
+    ['CV','Cost Variance',       fmtCur(cv),  cv>=0],
+    ['SV','Schedule Variance',   fmtCur(sv),  sv>=0],
+    ['CPI','Cost Perf. Index',   fmtIdx(cpi), cpi>=1],
+    ['SPI','Schedule Perf. Index',fmtIdx(spi),spi>=1],
+    ['EAC','Est. at Completion', fmtCur(eac), true],
+    ['ETC','Est. to Complete',   fmtCur(etc), true],
+    ['VAC','Variance at Completion',fmtCur(vac),vac>=0],
+    ['TCPI','To-Complete Index', fmtIdx(tcpi),tcpi<=1],
+  ];
+  return `<div class="canvas-two">
+    <div class="card">
+      <div class="card-header">
+        <i class="ti ti-calculator card-icon"></i>
+        <div><div class="card-title">Earned Value Calculator</div><div class="card-sub">Enter project data to compute all EV metrics</div></div>
+      </div>
+      ${[['BAC','Budget at Completion','bac'],['EV','Earned Value','ev'],['AC','Actual Cost','ac'],['PV','Planned Value','pv']].map(([a,l,k])=>`
+        <div class="calc-row">
+          <span class="calc-label" style="min-width:36px;font-family:var(--font-mono);font-weight:500">${a}</span>
+          <span class="calc-label" style="min-width:140px;font-size:11px">${l}</span>
+          <input class="calc-input" type="number" value="${state.ev[k]}" oninput="updateEV('${k}',this.value)" />
+        </div>`).join('')}
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <i class="ti ti-chart-bar card-icon"></i>
+        <div><div class="card-title">Computed Results</div><div class="card-sub">Color-coded: green = healthy, red = at risk</div></div>
+      </div>
+      ${rows.map(([abbr,lbl,val,good])=>`
+        <div class="result-row">
+          <div style="display:flex;gap:8px;align-items:baseline">
+            <span class="result-abbr">${abbr}</span>
+            <span class="result-label-txt">${lbl}</span>
+          </div>
+          <span class="result-val ${good?'good':'bad'}">${val}</span>
+        </div>`).join('')}
+      <button class="btn primary" style="margin-top:12px;width:100%" onclick="askAI('My EV project data: BAC=${fmtCur(B)}, EV=${fmtCur(E)}, AC=${fmtCur(A)}, PV=${fmtCur(P)}. CPI=${fmtIdx(cpi)}, SPI=${fmtIdx(spi)}. Analyze my project health and recommend corrective actions.')">
+        <i class="ti ti-message-chatbot"></i> Analyze with AI ↗
+      </button>
+    </div>
+  </div>`;
+}
+
+function renderQuiz(){
+  if(state.quizComplete){
+    const pct = Math.round(state.quizScore/QUIZ_QUESTIONS.length*100);
+    return `<div class="canvas-one"><div class="card result-screen">
+      <div class="result-pct" style="color:${pct>=70?'var(--color-text-success)':'var(--color-text-danger)'}">${pct}%</div>
+      <div style="font-size:18px;font-weight:500;margin:8px 0">${state.quizScore}/${QUIZ_QUESTIONS.length} correct</div>
+      <div style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1.5rem">${pct>=70?'Great work! You\'re on track for the PMP exam.':'Keep studying — aim for 75%+ on exam day.'}</div>
+      <div class="btn-row" style="justify-content:center">
+        <button class="btn primary" onclick="restartQuiz()"><i class="ti ti-refresh"></i> Retake Quiz</button>
+        <button class="btn" onclick="askAI('I scored ${pct}% on my PMP formula quiz. Give me personalized study tips for the weak areas.')"><i class="ti ti-message-chatbot"></i> Get Study Tips ↗</button>
+      </div>
+    </div></div>`;
+  }
+  const q = QUIZ_QUESTIONS[state.quizIdx];
+  const pct = Math.round(state.quizIdx/QUIZ_QUESTIONS.length*100);
+  return `<div class="canvas-one"><div class="card">
+    <div class="card-header">
+      <i class="ti ti-pencil card-icon"></i>
+      <div><div class="card-title">Practice Quiz</div><div class="card-sub">Question ${state.quizIdx+1} of ${QUIZ_QUESTIONS.length} · Score: ${state.quizScore}</div></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="progress-label">${pct}% complete</div>
+    <div class="quiz-q">${q.q}</div>
+    <div class="quiz-opts" id="quizOpts">
+      ${q.opts.map((o,i)=>`<button class="quiz-opt" onclick="answerQuiz(${i})" id="opt${i}">${String.fromCharCode(65+i)}. ${o}</button>`).join('')}
+    </div>
+    <div id="quizFeedback"></div>
+    <div id="quizNext"></div>
+  </div></div>`;
+}
+
+function renderCheatSheet(){
+  const cats = {
+    'Earned Value Indices':   [{a:'CPI',e:'EV/AC'},{a:'SPI',e:'EV/PV'},{a:'TCPI',e:'(BAC−EV)/(BAC−AC)'}],
+    'Earned Value Variances': [{a:'CV',e:'EV−AC'},{a:'SV',e:'EV−PV'},{a:'VAC',e:'BAC−EAC'}],
+    'Estimates & Forecasts':  [{a:'EAC (typ)',e:'BAC/CPI'},{a:'EAC (fresh)',e:'AC+ETC'},{a:'ETC',e:'EAC−AC'},{a:'PERT',e:'(O+4M+P)/6'},{a:'PERT σ',e:'(P−O)/6'}],
+    'Schedule':               [{a:'Float',e:'LS−ES or LF−EF'},{a:'PERT σ²',e:'[(P−O)/6]²'}],
+    'Financial':              [{a:'PV',e:'FV/(1+r)^n'},{a:'ROI',e:'(B−C)/C×100%'},{a:'BCR',e:'Benefits/Costs'}],
+    'Other':                  [{a:'Comm.',e:'N(N−1)/2'},{a:'EMV',e:'Probability×Impact'}],
+  };
+  const rules = [
+    ['CPI/SPI > 1','Good performance'],['CPI/SPI < 1','Problem — investigate'],
+    ['CV/SV > 0','Under budget / ahead'],['CV/SV < 0','Over budget / behind'],
+    ['TCPI > 1','Need higher efficiency'],['Float = 0','Critical path activity'],
+    ['SV → 0','At project completion'],['EAC = BAC','If CPI stays at 1.0'],
+  ];
+  return `<div class="canvas-one"><div class="card">
+    <div class="card-header">
+      <i class="ti ti-file-description card-icon"></i>
+      <div><div class="card-title">Quick Reference Cheat Sheet</div><div class="card-sub">All formulas at a glance</div></div>
+    </div>
+    <div class="cheat-grid">
+      ${Object.entries(cats).map(([title,items])=>`
+        <div class="cs-cat">
+          <div class="cs-cat-title">${title}</div>
+          ${items.map(it=>`<div class="cs-item"><span class="cs-abbr">${it.a}</span><span class="cs-eq">${it.e}</span></div>`).join('')}
+        </div>`).join('')}
+    </div>
+    <div style="background:var(--color-bg-secondary);border-radius:var(--radius-md);padding:12px">
+      <div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);margin-bottom:8px">Key Interpretation Rules</div>
+      <div class="rules-grid">
+        ${rules.map(([rule,meaning])=>`
+          <div class="rule-item">
+            <span style="font-family:var(--font-mono);font-weight:500">${rule}</span>
+            <span style="color:var(--color-text-secondary)"> = ${meaning}</span>
+          </div>`).join('')}
+      </div>
+    </div>
+  </div></div>`;
+}
+
+function renderAI(){
+  return `<div class="canvas-one"><div class="card">
+    <div class="card-header">
+      <i class="ti ti-message-chatbot card-icon"></i>
+      <div><div class="card-title">AI PMP Tutor</div><div class="card-sub">Powered by Claude · Ask anything about formulas</div></div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num">24</div><div class="stat-lbl">Formulas</div></div>
+      <div class="stat-card"><div class="stat-num">8</div><div class="stat-lbl">Quiz Questions</div></div>
+      <div class="stat-card"><div class="stat-num">∞</div><div class="stat-lbl">AI Questions</div></div>
+    </div>
+    <div class="ai-box">
+      <div class="ai-top"><div class="ai-dot"></div><span class="ai-label">Claude AI Tutor</span></div>
+      <div class="ai-body" id="aiBody">
+        ${state.aiMessages.map(m=>`
+          <div class="ai-bubble ${m.role}">
+            <div class="ai-avatar ${m.role==='ai'?'bot':'user'}">
+              <i class="ti ${m.role==='ai'?'ti-robot':'ti-user'}"></i>
+            </div>
+            <div class="ai-text ${m.role==='ai'?'bot':'user'}">${m.text.replace(/\n/g,'<br>')}</div>
+          </div>`).join('')}
+        ${state.aiLoading?`<div class="ai-bubble ai"><div class="ai-avatar bot"><i class="ti ti-robot"></i></div><div class="ai-text bot"><div class="typing"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div></div>`:''}
+      </div>
+      <div class="ai-input-row">
+        <input class="ai-input" id="aiInput" type="text" placeholder="Ask: explain TCPI, what is SV, give me a hard EVM question..." onkeydown="if(event.key==='Enter')sendAI()"/>
+        <button class="btn primary" onclick="sendAI()"><i class="ti ti-send"></i></button>
+      </div>
+    </div>
+    <div class="quick-btns">
+      ${['Explain CPI vs SPI','When to use each EAC formula','IT project risk EMV example','PERT vs CPM differences','TCPI above 1 — what to do?'].map(s=>`
+        <button class="btn" style="font-size:12px" onclick="askAI('${s}')">${s} ↗</button>`).join('')}
+    </div>
+  </div></div>`;
+}
+
+function render(){
+  renderTabs();
+  const panel = document.getElementById('panel');
+  if(state.activeTab==='formulas')    panel.innerHTML = renderFormulas();
+  else if(state.activeTab==='calculator') panel.innerHTML = renderCalculator();
+  else if(state.activeTab==='quiz')   panel.innerHTML = renderQuiz();
+  else if(state.activeTab==='cheatsheet') panel.innerHTML = renderCheatSheet();
+  else if(state.activeTab==='ai')     panel.innerHTML = renderAI();
+}
+
+/* ─── ACTIONS ───────────────────────────────────────────────────────────── */
+function switchTab(id){ state.activeTab=id; render(); }
+
+function selectFormula(i){
+  state.activeFormula=i;
+  document.querySelectorAll('.formula-row').forEach((el,idx)=>el.classList.toggle('active',idx===i));
+  const detail=document.getElementById('formulaDetail');
+  if(detail) detail.innerHTML=renderFormulaDetail(i);
+}
+
+function updateEV(k,v){ state.ev[k]=v; render(); }
+
+function answerQuiz(selected){
+  if(state.quizAnswered)return;
+  state.quizAnswered=true;
+  const q=QUIZ_QUESTIONS[state.quizIdx];
+  if(selected===q.ans)state.quizScore++;
+  document.querySelectorAll('.quiz-opt').forEach((el,i)=>{
+    el.disabled=true;
+    if(i===q.ans)el.classList.add('correct');
+    else if(i===selected)el.classList.add('wrong');
+  });
+  const fb=document.getElementById('quizFeedback');
+  if(fb) fb.innerHTML=`<div class="quiz-feedback"><strong>Explanation:</strong> ${q.exp}</div>`;
+  const nx=document.getElementById('quizNext');
+  if(nx) nx.innerHTML=`<div class="btn-row"><button class="btn primary" onclick="nextQuestion()">${state.quizIdx<QUIZ_QUESTIONS.length-1?'Next Question ↓':'See Results'}</button></div>`;
+}
+
+function nextQuestion(){
+  if(state.quizIdx<QUIZ_QUESTIONS.length-1){ state.quizIdx++; state.quizAnswered=false; render(); }
+  else{ state.quizComplete=true; render(); }
+}
+
+function restartQuiz(){ state.quizIdx=0; state.quizScore=0; state.quizAnswered=false; state.quizComplete=false; render(); }
+
+/* ─── AI TUTOR ──────────────────────────────────────────────────────────── */
+async function callClaude(userMsg){
+  const system = `You are an expert PMP exam tutor specializing in IT Project Management. You know all PMP formulas deeply: Earned Value Management (EV,PV,AC,CV,SV,CPI,SPI,EAC,ETC,VAC,TCPI), PERT, Critical Path, Communication Channels, EMV, financial metrics (NPV, ROI, BCR, PV). Give concise, exam-focused answers. Use specific numbers and examples from IT projects. Keep responses under 200 words unless explaining complex topics.`;
+  const msgs = state.aiMessages.map(m=>({role:m.role==='ai'?'assistant':'user',content:m.text}));
+  msgs.push({role:'user',content:userMsg});
+  const resp = await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system,messages:msgs})
+  });
+  const data = await resp.json();
+  return data.content.map(c=>c.text||'').join('');
+}
+
+async function sendAI(){
+  const inp=document.getElementById('aiInput');
+  const txt=inp?inp.value.trim():'';
+  if(!txt||state.aiLoading)return;
+  if(inp)inp.value='';
+  await askAI(txt);
+}
+
+async function askAI(msg){
+  state.activeTab='ai';
+  state.aiMessages.push({role:'user',text:msg});
+  state.aiLoading=true;
+  render();
+  const body=document.getElementById('aiBody');
+  if(body)body.scrollTop=body.scrollHeight;
+  try{
+    const reply=await callClaude(msg);
+    state.aiMessages.push({role:'ai',text:reply});
+  }catch(e){
+    state.aiMessages.push({role:'ai',text:'Sorry, I had trouble connecting to the AI. Please check your API access and try again.'});
+  }
+  state.aiLoading=false;
+  render();
+  const b=document.getElementById('aiBody');
+  if(b)b.scrollTop=b.scrollHeight;
+}
+
+/* ─── INIT ──────────────────────────────────────────────────────────────── */
+render();
+</script>
+</body>
+</html>
