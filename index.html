@@ -667,26 +667,13 @@ async function callClaude(userMsg) {
   }));
   msgs.push({ role: 'user', content: userMsg });
 
-  const resp = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      // No API key needed — handled automatically in this environment
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      system,
-      messages: msgs
-    })
+    const resp = await fetch('/.netlify/functions/claude',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system,messages:msgs})
   });
-  if (!resp.ok) {
-    const err = await resp.text();
-    throw new Error(`API error ${resp.status}: ${err}`);
-  }
   const data = await resp.json();
-  return data.content.map(c => c.text || '').join('');
-
+  return data.content.map(c=>c.text||'').join('');
 async function askAI(msg){
   state.activeTab='ai';
   state.aiMessages.push({role:'user',text:msg});
