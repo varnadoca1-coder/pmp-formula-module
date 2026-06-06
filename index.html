@@ -671,7 +671,6 @@ async function callClaude(userMsg) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ model: 'claude-sonnet-4-5', max_tokens: 1000, system, messages: msgs })
   });
-
   if (!resp.ok) {
     const err = await resp.text();
     throw new Error(`API error ${resp.status}: ${err}`);
